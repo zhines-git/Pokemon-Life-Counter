@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test</title>
+<style>
+body { background: #111; color: white; font-family: sans-serif; padding: 40px; text-align: center; }
+button { font-size: 32px; padding: 20px 40px; margin: 20px; border-radius: 12px; border: none; background: gold; color: black; cursor: pointer; }
+#output { font-size: 48px; margin-top: 30px; }
+</style>
+</head>
+<body>
+<div id="output">0</div>
+<button id="plus">+1</button>
+<button id="minus">-1</button>
+<script>
+var count = 0;
+document.getElementById('plus').addEventListener('click', function() {
+  count++;
+  document.getElementById('output').textContent = count;
+});
+document.getElementById('minus').addEventListener('click', function() {
+  count--;
+  document.getElementById('output').textContent = count;
+});
+</script>
+</body>
+</html>
