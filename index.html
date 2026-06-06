@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="shortcut icon" href="icon.png">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Pokémon Life Counter</title>
@@ -638,7 +640,8 @@ function updateDisplay(who) {
 
   // history
   const recent = s.history.slice(-3).reverse();
-  histEl.textContent = recent.map(h => (h > 0 ? '+' : '') + h).join('\n');
+  histEl.textContent = recent.map(h => (h > 0 ? '+' : '') + h).join('
+');
 
   // KO check
   const koEl = document.getElementById(who === 'me' ? 'meKO' : 'oppKO');
