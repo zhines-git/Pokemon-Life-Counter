@@ -5,7 +5,7 @@
 <link rel="shortcut icon" href="icon.png">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Pokémon Life Counter</title>
+<title>Pokemon HP Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -23,9 +23,7 @@
     --hp-yellow: #FFC107;
     --hp-red: #F44336;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
   body {
     background: var(--dark);
     color: var(--text);
@@ -35,8 +33,6 @@
     flex-direction: column;
     overflow: hidden;
   }
-
-  /* === HEADER === */
   .header {
     background: linear-gradient(135deg, #1a1a1a 0%, #111 100%);
     border-bottom: 2px solid var(--gold);
@@ -56,18 +52,9 @@
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
-  .pokeball-icon {
-    width: 28px; height: 28px;
-    position: relative;
-    flex-shrink: 0;
-  }
+  .pokeball-icon { width: 28px; height: 28px; position: relative; flex-shrink: 0; }
   .pokeball-icon svg { width: 100%; height: 100%; }
-
-  .header-actions {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-  }
+  .header-actions { display: flex; gap: 8px; align-items: center; }
   .btn-reset {
     background: rgba(255,215,0,0.1);
     border: 1px solid var(--gold-dim);
@@ -83,17 +70,7 @@
     text-transform: uppercase;
   }
   .btn-reset:active { background: rgba(255,215,0,0.25); transform: scale(0.95); }
-
-  /* === MAIN === */
-  .main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    overflow: hidden;
-  }
-
-  /* === PLAYER PANEL === */
+  .main { flex: 1; display: flex; flex-direction: column; gap: 0; overflow: hidden; }
   .player-panel {
     flex: 1;
     display: flex;
@@ -102,38 +79,14 @@
     overflow: hidden;
     transition: flex 0.3s ease;
   }
-
-  .player-panel.opponent {
-    transform: rotate(180deg);
-    border-bottom: 2px solid var(--border);
-  }
-  .player-panel.me {
-    border-top: 2px solid var(--border);
-  }
-
-  .panel-bg {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-  }
-  .player-panel.opponent .panel-bg {
-    background: radial-gradient(ellipse at 50% 100%, #1a2a3a 0%, #0a0f1a 70%);
-  }
-  .player-panel.me .panel-bg {
-    background: radial-gradient(ellipse at 50% 0%, #2a1a1a 0%, #1a0a0a 70%);
-  }
-
-  /* Decorative rings */
-  .panel-ring {
-    position: absolute;
-    border-radius: 50%;
-    border: 1px solid;
-    pointer-events: none;
-    z-index: 0;
-  }
+  .player-panel.opponent { transform: rotate(180deg); border-bottom: 2px solid var(--border); }
+  .player-panel.me { border-top: 2px solid var(--border); }
+  .panel-bg { position: absolute; inset: 0; z-index: 0; }
+  .player-panel.opponent .panel-bg { background: radial-gradient(ellipse at 50% 100%, #1a2a3a 0%, #0a0f1a 70%); }
+  .player-panel.me .panel-bg { background: radial-gradient(ellipse at 50% 0%, #2a1a1a 0%, #1a0a0a 70%); }
+  .panel-ring { position: absolute; border-radius: 50%; border: 1px solid; pointer-events: none; z-index: 0; }
   .opponent .panel-ring { border-color: rgba(26,111,191,0.12); }
   .me .panel-ring { border-color: rgba(227,53,13,0.12); }
-
   .panel-content {
     position: relative;
     z-index: 1;
@@ -145,83 +98,29 @@
     padding: 12px 16px;
     gap: 10px;
   }
-
-  /* opponent is rotated 180, so its "top" is the divider line */
-  .player-panel.opponent .panel-content {
-    justify-content: flex-end;
-    padding-bottom: 16px;
-  }
-  .player-panel.me .panel-content {
-    justify-content: flex-start;
-    padding-top: 16px;
-  }
-
-  .player-label {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 13px;
-    letter-spacing: 3px;
-    opacity: 0.5;
-  }
+  .player-panel.opponent .panel-content { justify-content: flex-end; padding-bottom: 16px; }
+  .player-panel.me .panel-content { justify-content: flex-start; padding-top: 16px; }
+  .player-label { font-family: 'Bebas Neue', sans-serif; font-size: 13px; letter-spacing: 3px; opacity: 0.5; }
   .opponent .player-label { color: var(--blue); }
   .me .player-label { color: var(--red); }
-
-  /* === HP DISPLAY === */
-  .hp-display {
-    display: flex;
-    align-items: baseline;
-    gap: 6px;
-  }
+  .hp-display { display: flex; align-items: baseline; gap: 6px; }
   .hp-number {
     font-family: 'Bebas Neue', sans-serif;
     font-size: clamp(72px, 18vw, 110px);
     line-height: 1;
     transition: color 0.3s, transform 0.1s;
   }
-  .hp-number.bump {
-    animation: bump 0.15s ease-out;
-  }
+  .hp-number.bump { animation: bump 0.15s ease-out; }
   @keyframes bump {
     0% { transform: scale(1); }
     50% { transform: scale(1.08); }
     100% { transform: scale(1); }
   }
-  .hp-unit {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 22px;
-    opacity: 0.5;
-    letter-spacing: 1px;
-  }
-
-  /* === HP BAR === */
-  .hp-bar-wrap {
-    width: 100%;
-    max-width: 280px;
-    height: 8px;
-    background: rgba(255,255,255,0.08);
-    border-radius: 4px;
-    overflow: hidden;
-  }
-  .hp-bar-fill {
-    height: 100%;
-    border-radius: 4px;
-    transition: width 0.25s ease, background 0.3s;
-  }
-
-  /* === CONTROLS === */
-  .controls {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    width: 100%;
-    max-width: 300px;
-  }
-
-  .adjust-row {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-  }
-
+  .hp-unit { font-family: 'Bebas Neue', sans-serif; font-size: 22px; opacity: 0.5; letter-spacing: 1px; }
+  .hp-bar-wrap { width: 100%; max-width: 280px; height: 8px; background: rgba(255,255,255,0.08); border-radius: 4px; overflow: hidden; }
+  .hp-bar-fill { height: 100%; border-radius: 4px; transition: width 0.25s ease, background 0.3s; }
+  .controls { display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 300px; }
+  .adjust-row { display: flex; gap: 8px; justify-content: center; }
   .adj-btn {
     flex: 1;
     height: 48px;
@@ -240,52 +139,15 @@
     gap: 4px;
   }
   .adj-btn:active { transform: scale(0.93); }
-
-  .adj-btn.minus {
-    background: rgba(244,67,54,0.15);
-    color: #F44336;
-    border: 1px solid rgba(244,67,54,0.3);
-  }
+  .adj-btn.minus { background: rgba(244,67,54,0.15); color: #F44336; border: 1px solid rgba(244,67,54,0.3); }
   .adj-btn.minus:active { background: rgba(244,67,54,0.35); }
-
-  .adj-btn.plus {
-    background: rgba(76,175,80,0.15);
-    color: #4CAF50;
-    border: 1px solid rgba(76,175,80,0.3);
-  }
+  .adj-btn.plus { background: rgba(76,175,80,0.15); color: #4CAF50; border: 1px solid rgba(76,175,80,0.3); }
   .adj-btn.plus:active { background: rgba(76,175,80,0.35); }
-
-  .adj-btn.minus-big {
-    background: rgba(244,67,54,0.08);
-    color: rgba(244,67,54,0.7);
-    border: 1px solid rgba(244,67,54,0.15);
-  }
-  .adj-btn.plus-big {
-    background: rgba(76,175,80,0.08);
-    color: rgba(76,175,80,0.7);
-    border: 1px solid rgba(76,175,80,0.15);
-  }
-
-  /* === SET MAX HP BUTTON === */
-  .set-max-row {
-    display: flex;
-    gap: 6px;
-    justify-content: center;
-    align-items: center;
-  }
-  .max-hp-label {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-  .max-hp-value {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 18px;
-    color: var(--text);
-    opacity: 0.7;
-  }
+  .adj-btn.minus-big { background: rgba(244,67,54,0.08); color: rgba(244,67,54,0.7); border: 1px solid rgba(244,67,54,0.15); }
+  .adj-btn.plus-big { background: rgba(76,175,80,0.08); color: rgba(76,175,80,0.7); border: 1px solid rgba(76,175,80,0.15); }
+  .set-max-row { display: flex; gap: 6px; justify-content: center; align-items: center; }
+  .max-hp-label { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
+  .max-hp-value { font-family: 'Bebas Neue', sans-serif; font-size: 18px; color: var(--text); opacity: 0.7; }
   .btn-small {
     background: rgba(255,255,255,0.06);
     border: 1px solid rgba(255,255,255,0.12);
@@ -301,173 +163,59 @@
     transition: all 0.15s;
   }
   .btn-small:active { background: rgba(255,255,255,0.15); transform: scale(0.95); }
-
-  /* === DIVIDER === */
-  .divider {
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--gold), transparent);
-    flex-shrink: 0;
-    position: relative;
-    z-index: 10;
-  }
-  .divider-center {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%,-50%);
-    background: var(--dark);
-    padding: 0 8px;
-  }
-
-  /* === KO OVERLAY === */
+  .divider { height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); flex-shrink: 0; position: relative; z-index: 10; }
+  .divider-center { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); background: var(--dark); padding: 0 8px; }
   .ko-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(0,0,0,0.88);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 20;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s;
+    position: absolute; inset: 0; background: rgba(0,0,0,0.88);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 20; opacity: 0; pointer-events: none; transition: opacity 0.3s;
   }
-  .ko-overlay.show {
-    opacity: 1;
-    pointer-events: all;
-  }
+  .ko-overlay.show { opacity: 1; pointer-events: all; }
   .ko-text {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 72px;
-    color: var(--red);
-    letter-spacing: 8px;
-    text-shadow: 0 0 40px rgba(227,53,13,0.8), 0 0 80px rgba(227,53,13,0.4);
+    font-family: 'Bebas Neue', sans-serif; font-size: 72px; color: var(--red);
+    letter-spacing: 8px; text-shadow: 0 0 40px rgba(227,53,13,0.8), 0 0 80px rgba(227,53,13,0.4);
     animation: koFlash 0.5s ease-out;
   }
-  @keyframes koFlash {
-    0% { transform: scale(2); opacity: 0; }
-    100% { transform: scale(1); opacity: 1; }
-  }
-
-  /* === MODAL === */
+  @keyframes koFlash { 0% { transform: scale(2); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
   .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.85);
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s;
+    position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 100;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.2s;
   }
-  .modal-overlay.open {
-    opacity: 1;
-    pointer-events: all;
-  }
-  .modal {
-    background: var(--panel2);
-    border: 1px solid var(--gold-dim);
-    border-radius: 16px;
-    padding: 24px;
-    width: min(320px, 90vw);
-    box-shadow: 0 0 60px rgba(255,215,0,0.15);
-  }
-  .modal h3 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 22px;
-    letter-spacing: 2px;
-    color: var(--gold);
-    margin-bottom: 16px;
-  }
-  .modal-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-    margin-bottom: 16px;
-  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal { background: var(--panel2); border: 1px solid var(--gold-dim); border-radius: 16px; padding: 24px; width: min(320px, 90vw); box-shadow: 0 0 60px rgba(255,215,0,0.15); }
+  .modal h3 { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 2px; color: var(--gold); margin-bottom: 16px; }
+  .modal-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px; }
   .hp-preset {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.12);
-    color: var(--text);
-    border-radius: 8px;
-    padding: 10px 4px;
-    text-align: center;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 18px;
-    cursor: pointer;
-    transition: all 0.15s;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12);
+    color: var(--text); border-radius: 8px; padding: 10px 4px; text-align: center;
+    font-family: 'Bebas Neue', sans-serif; font-size: 18px; cursor: pointer; transition: all 0.15s;
   }
   .hp-preset:active { background: rgba(255,215,0,0.2); border-color: var(--gold); color: var(--gold); transform: scale(0.95); }
-  .custom-hp-row {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 16px;
-  }
+  .custom-hp-row { display: flex; gap: 8px; margin-bottom: 16px; }
   .custom-hp-input {
-    flex: 1;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 8px;
-    color: var(--text);
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 22px;
-    padding: 8px 12px;
-    outline: none;
-    text-align: center;
+    flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 8px; color: var(--text); font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px; padding: 8px 12px; outline: none; text-align: center;
   }
   .custom-hp-input:focus { border-color: var(--gold); }
-  .modal-row {
-    display: flex;
-    gap: 8px;
-    justify-content: flex-end;
-  }
+  .modal-row { display: flex; gap: 8px; justify-content: flex-end; }
   .btn-cancel {
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.12);
-    color: var(--muted);
-    font-family: 'Nunito', sans-serif;
-    font-weight: 700;
-    font-size: 13px;
-    padding: 8px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+    color: var(--muted); font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 13px;
+    padding: 8px 16px; border-radius: 8px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px;
   }
   .btn-confirm {
-    background: var(--gold);
-    border: none;
-    color: #000;
-    font-family: 'Nunito', sans-serif;
-    font-weight: 900;
-    font-size: 13px;
-    padding: 8px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: all 0.15s;
+    background: var(--gold); border: none; color: #000; font-family: 'Nunito', sans-serif;
+    font-weight: 900; font-size: 13px; padding: 8px 16px; border-radius: 8px; cursor: pointer;
+    text-transform: uppercase; letter-spacing: 1px; transition: all 0.15s;
   }
   .btn-confirm:active { transform: scale(0.95); }
-
-  /* History badge */
   .history-badge {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 6px;
-    padding: 3px 8px;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    color: var(--muted);
-    text-align: right;
-    max-width: 80px;
-    line-height: 1.4;
+    position: absolute; top: 8px; right: 8px; background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 3px 8px;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.5px; color: var(--muted);
+    text-align: right; max-width: 80px; line-height: 1.4; white-space: pre;
   }
 </style>
 </head>
@@ -483,13 +231,11 @@
       <circle cx="20" cy="20" r="3" fill="#FFD700" opacity="0.6"/>
     </svg>
   </div>
-  <div class="logo">Pokémon HP Tracker</div>
-  <button class="btn-reset" onclick="resetAll()">Reset</button>
+  <div class="logo">Pokemon HP Tracker</div>
+  <button class="btn-reset" id="btnReset">Reset</button>
 </div>
 
 <div class="main">
-
-  <!-- OPPONENT -->
   <div class="player-panel opponent" id="opponentPanel">
     <div class="panel-bg"></div>
     <div class="panel-ring" style="width:200px;height:200px;bottom:-60px;left:50%;transform:translateX(-50%)"></div>
@@ -498,7 +244,7 @@
       <div class="set-max-row">
         <span class="max-hp-label">Max</span>
         <span class="max-hp-value" id="oppMaxDisplay">120</span>
-        <button class="btn-small" onclick="openModal('opponent')">SET</button>
+        <button class="btn-small" id="oppSetBtn">SET</button>
       </div>
       <div class="hp-display">
         <span class="hp-number" id="oppHP" style="color:var(--hp-green)">120</span>
@@ -509,17 +255,15 @@
       </div>
       <div class="controls">
         <div class="adjust-row">
-          <button class="adj-btn minus-big" onclick="adjust('opponent',-10)">−10</button>
-          <button class="adj-btn minus" onclick="adjust('opponent',-1)">−1</button>
-          <button class="adj-btn plus" onclick="adjust('opponent',1)">+1</button>
-          <button class="adj-btn plus-big" onclick="adjust('opponent',10)">+10</button>
+          <button class="adj-btn minus-big" data-who="opponent" data-delta="-10">-10</button>
+          <button class="adj-btn minus" data-who="opponent" data-delta="-1">-1</button>
+          <button class="adj-btn plus" data-who="opponent" data-delta="1">+1</button>
+          <button class="adj-btn plus-big" data-who="opponent" data-delta="10">+10</button>
         </div>
       </div>
       <div class="player-label">OPPONENT</div>
     </div>
-    <div class="ko-overlay" id="oppKO" onclick="dismissKO('opponent')">
-      <div class="ko-text">K.O.!</div>
-    </div>
+    <div class="ko-overlay" id="oppKO"><div class="ko-text">K.O.!</div></div>
     <div class="history-badge" id="oppHistory"></div>
   </div>
 
@@ -532,7 +276,6 @@
     </div>
   </div>
 
-  <!-- ME -->
   <div class="player-panel me" id="mePanel">
     <div class="panel-bg"></div>
     <div class="panel-ring" style="width:200px;height:200px;top:-60px;left:50%;transform:translateX(-50%)"></div>
@@ -541,10 +284,10 @@
       <div class="player-label">YOU</div>
       <div class="controls">
         <div class="adjust-row">
-          <button class="adj-btn minus-big" onclick="adjust('me',-10)">−10</button>
-          <button class="adj-btn minus" onclick="adjust('me',-1)">−1</button>
-          <button class="adj-btn plus" onclick="adjust('me',1)">+1</button>
-          <button class="adj-btn plus-big" onclick="adjust('me',10)">+10</button>
+          <button class="adj-btn minus-big" data-who="me" data-delta="-10">-10</button>
+          <button class="adj-btn minus" data-who="me" data-delta="-1">-1</button>
+          <button class="adj-btn plus" data-who="me" data-delta="1">+1</button>
+          <button class="adj-btn plus-big" data-who="me" data-delta="10">+10</button>
         </div>
       </div>
       <div class="hp-bar-wrap">
@@ -557,156 +300,157 @@
       <div class="set-max-row">
         <span class="max-hp-label">Max</span>
         <span class="max-hp-value" id="meMaxDisplay">120</span>
-        <button class="btn-small" onclick="openModal('me')">SET</button>
+        <button class="btn-small" id="meSetBtn">SET</button>
       </div>
     </div>
-    <div class="ko-overlay" id="meKO" onclick="dismissKO('me')">
-      <div class="ko-text">K.O.!</div>
-    </div>
+    <div class="ko-overlay" id="meKO"><div class="ko-text">K.O.!</div></div>
     <div class="history-badge" id="meHistory"></div>
   </div>
-
 </div>
 
-<!-- Modal -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
     <h3 id="modalTitle">Set Max HP</h3>
-    <div class="modal-grid">
-      <div class="hp-preset" onclick="selectPreset(30)">30</div>
-      <div class="hp-preset" onclick="selectPreset(40)">40</div>
-      <div class="hp-preset" onclick="selectPreset(50)">50</div>
-      <div class="hp-preset" onclick="selectPreset(60)">60</div>
-      <div class="hp-preset" onclick="selectPreset(70)">70</div>
-      <div class="hp-preset" onclick="selectPreset(80)">80</div>
-      <div class="hp-preset" onclick="selectPreset(90)">90</div>
-      <div class="hp-preset" onclick="selectPreset(100)">100</div>
-      <div class="hp-preset" onclick="selectPreset(110)">110</div>
-      <div class="hp-preset" onclick="selectPreset(120)">120</div>
-      <div class="hp-preset" onclick="selectPreset(130)">130</div>
-      <div class="hp-preset" onclick="selectPreset(140)">140</div>
-      <div class="hp-preset" onclick="selectPreset(150)">150</div>
-      <div class="hp-preset" onclick="selectPreset(160)">160</div>
-      <div class="hp-preset" onclick="selectPreset(180)">180</div>
-      <div class="hp-preset" onclick="selectPreset(200)">200</div>
-      <div class="hp-preset" onclick="selectPreset(220)">220</div>
-      <div class="hp-preset" onclick="selectPreset(250)">250</div>
-      <div class="hp-preset" onclick="selectPreset(300)">300</div>
-      <div class="hp-preset" onclick="selectPreset(340)">340</div>
-    </div>
+    <div class="modal-grid" id="presetGrid"></div>
     <div class="custom-hp-row">
       <input type="number" class="custom-hp-input" id="customHPInput" placeholder="Custom" min="10" max="999">
     </div>
     <div class="modal-row">
-      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
-      <button class="btn-confirm" onclick="confirmModal()">Confirm</button>
+      <button class="btn-cancel" id="btnCancel">Cancel</button>
+      <button class="btn-confirm" id="btnConfirm">Confirm</button>
     </div>
   </div>
 </div>
 
 <script>
-const state = {
-  me: { hp: 120, max: 120, history: [] },
-  opponent: { hp: 120, max: 120, history: [] }
-};
+(function() {
+  var state = {
+    me: { hp: 120, max: 120, history: [] },
+    opponent: { hp: 120, max: 120, history: [] }
+  };
+  var modalTarget = null;
+  var presets = [30,40,50,60,70,80,90,100,110,120,130,140,150,160,180,200,220,250,300,340];
 
-let modalTarget = null;
+  // Build preset buttons
+  var grid = document.getElementById('presetGrid');
+  presets.forEach(function(val) {
+    var btn = document.createElement('div');
+    btn.className = 'hp-preset';
+    btn.textContent = val;
+    btn.addEventListener('click', function() {
+      document.getElementById('customHPInput').value = val;
+    });
+    grid.appendChild(btn);
+  });
 
-function getHPColor(pct) {
-  if (pct > 0.5) return 'var(--hp-green)';
-  if (pct > 0.25) return 'var(--hp-yellow)';
-  return 'var(--hp-red)';
-}
+  function getHPColor(pct) {
+    if (pct > 0.5) return 'var(--hp-green)';
+    if (pct > 0.25) return 'var(--hp-yellow)';
+    return 'var(--hp-red)';
+  }
 
-function updateDisplay(who) {
-  const s = state[who];
-  const pct = Math.max(0, s.hp / s.max);
-  const color = getHPColor(pct);
-  const hpEl = document.getElementById(who === 'me' ? 'meHP' : 'oppHP');
-  const barEl = document.getElementById(who === 'me' ? 'meBar' : 'oppBar');
-  const maxEl = document.getElementById(who === 'me' ? 'meMaxDisplay' : 'oppMaxDisplay');
-  const histEl = document.getElementById(who === 'me' ? 'meHistory' : 'oppHistory');
+  function updateDisplay(who) {
+    var s = state[who];
+    var pct = Math.max(0, s.hp / s.max);
+    var color = getHPColor(pct);
+    var hpEl = document.getElementById(who === 'me' ? 'meHP' : 'oppHP');
+    var barEl = document.getElementById(who === 'me' ? 'meBar' : 'oppBar');
+    var maxEl = document.getElementById(who === 'me' ? 'meMaxDisplay' : 'oppMaxDisplay');
+    var histEl = document.getElementById(who === 'me' ? 'meHistory' : 'oppHistory');
 
-  hpEl.textContent = Math.max(0, s.hp);
-  hpEl.style.color = color;
-  barEl.style.width = (pct * 100) + '%';
-  barEl.style.background = color;
-  maxEl.textContent = s.max;
+    hpEl.textContent = Math.max(0, s.hp);
+    hpEl.style.color = color;
+    barEl.style.width = (pct * 100) + '%';
+    barEl.style.background = color;
+    maxEl.textContent = s.max;
 
-  // bump animation
-  hpEl.classList.remove('bump');
-  void hpEl.offsetWidth;
-  hpEl.classList.add('bump');
+    hpEl.classList.remove('bump');
+    void hpEl.offsetWidth;
+    hpEl.classList.add('bump');
 
-  // history
-  const recent = s.history.slice(-3).reverse();
-  histEl.textContent = recent.map(h => (h > 0 ? '+' : '') + h).join('
+    var recent = s.history.slice(-3).reverse();
+    histEl.textContent = recent.map(function(h) { return (h > 0 ? '+' : '') + h; }).join('
 ');
 
-  // KO check
-  const koEl = document.getElementById(who === 'me' ? 'meKO' : 'oppKO');
-  if (s.hp <= 0) {
-    koEl.classList.add('show');
+    var koEl = document.getElementById(who === 'me' ? 'meKO' : 'oppKO');
+    if (s.hp <= 0) {
+      koEl.classList.add('show');
+    }
   }
-}
 
-function adjust(who, delta) {
-  const s = state[who];
-  if (s.hp <= 0 && delta < 0) return;
-  s.hp = Math.min(s.max, s.hp + delta);
-  s.history.push(delta);
-  if (s.history.length > 10) s.history.shift();
-  updateDisplay(who);
-}
-
-function dismissKO(who) {
-  document.getElementById(who === 'me' ? 'meKO' : 'oppKO').classList.remove('show');
-}
-
-function openModal(who) {
-  modalTarget = who;
-  document.getElementById('modalTitle').textContent = (who === 'me' ? 'Your' : "Opponent's") + ' Max HP';
-  document.getElementById('customHPInput').value = '';
-  document.getElementById('modalOverlay').classList.add('open');
-}
-
-function closeModal() {
-  document.getElementById('modalOverlay').classList.remove('open');
-  modalTarget = null;
-}
-
-function selectPreset(val) {
-  document.getElementById('customHPInput').value = val;
-}
-
-function confirmModal() {
-  const val = parseInt(document.getElementById('customHPInput').value);
-  if (!isNaN(val) && val >= 10 && val <= 999) {
-    state[modalTarget].max = val;
-    state[modalTarget].hp = val;
-    state[modalTarget].history = [];
-    dismissKO(modalTarget);
-    updateDisplay(modalTarget);
-  }
-  closeModal();
-}
-
-function resetAll() {
-  ['me','opponent'].forEach(who => {
-    state[who].hp = state[who].max;
-    state[who].history = [];
-    dismissKO(who);
+  function adjust(who, delta) {
+    var s = state[who];
+    if (s.hp <= 0 && delta < 0) return;
+    s.hp = Math.min(s.max, s.hp + delta);
+    s.history.push(delta);
+    if (s.history.length > 10) s.history.shift();
     updateDisplay(who);
+  }
+
+  function dismissKO(who) {
+    document.getElementById(who === 'me' ? 'meKO' : 'oppKO').classList.remove('show');
+  }
+
+  function openModal(who) {
+    modalTarget = who;
+    document.getElementById('modalTitle').textContent = (who === 'me' ? 'Your' : "Opponent's") + ' Max HP';
+    document.getElementById('customHPInput').value = '';
+    document.getElementById('modalOverlay').classList.add('open');
+  }
+
+  function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('open');
+    modalTarget = null;
+  }
+
+  function confirmModal() {
+    var val = parseInt(document.getElementById('customHPInput').value);
+    if (!isNaN(val) && val >= 10 && val <= 999) {
+      state[modalTarget].max = val;
+      state[modalTarget].hp = val;
+      state[modalTarget].history = [];
+      dismissKO(modalTarget);
+      updateDisplay(modalTarget);
+    }
+    closeModal();
+  }
+
+  // Adjust buttons
+  document.querySelectorAll('.adj-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      adjust(this.getAttribute('data-who'), parseInt(this.getAttribute('data-delta')));
+    });
   });
-}
 
-document.getElementById('modalOverlay').addEventListener('click', function(e) {
-  if (e.target === this) closeModal();
-});
+  // KO overlays
+  document.getElementById('meKO').addEventListener('click', function() { dismissKO('me'); });
+  document.getElementById('oppKO').addEventListener('click', function() { dismissKO('opponent'); });
 
-// init
-updateDisplay('me');
-updateDisplay('opponent');
+  // Set buttons
+  document.getElementById('meSetBtn').addEventListener('click', function() { openModal('me'); });
+  document.getElementById('oppSetBtn').addEventListener('click', function() { openModal('opponent'); });
+
+  // Reset
+  document.getElementById('btnReset').addEventListener('click', function() {
+    ['me','opponent'].forEach(function(who) {
+      state[who].hp = state[who].max;
+      state[who].history = [];
+      dismissKO(who);
+      updateDisplay(who);
+    });
+  });
+
+  // Modal buttons
+  document.getElementById('btnCancel').addEventListener('click', closeModal);
+  document.getElementById('btnConfirm').addEventListener('click', confirmModal);
+  document.getElementById('modalOverlay').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  // Init
+  updateDisplay('me');
+  updateDisplay('opponent');
+})();
 </script>
 </body>
 </html>
